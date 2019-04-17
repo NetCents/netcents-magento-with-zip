@@ -1,6 +1,9 @@
 <?php
 
 namespace NetCents\Merchant\Library\NCWidgetClient;
+
+use NetCents\Merchant\Library\NCPaymentData;
+
 include_once('httpful.phar');
 
 class NCWidgetClient {

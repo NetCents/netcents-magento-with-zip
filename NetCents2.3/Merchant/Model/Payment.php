@@ -213,4 +213,19 @@ class Payment extends AbstractMethod {
         return $statusOption;
     }
 
+    public function updateOrderStatus(Order $order) {
+        try {
+//            $orderState = $this->getOrderStatus($callback->getStatus());
+
+//            $order
+//                ->setState($orderState, true)
+//                ->setStatus($order->getConfig()->getStateDefaultStatus($orderState))
+//                ->save();
+//            return true;
+        }
+        catch (\Exception $e) {
+            exit('Error occurred: ' . $e);
+        }
+    }
+
 }
