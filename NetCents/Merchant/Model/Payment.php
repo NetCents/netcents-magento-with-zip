@@ -1,4 +1,5 @@
 <?php
+
 namespace NetCents\Merchant\Model;
 
 use Braintree\Exception;
@@ -19,7 +20,8 @@ use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 
 
-class Payment extends AbstractMethod {
+class Payment extends AbstractMethod
+{
     const COINGATE_MAGENTO_VERSION = '1.0.6';
     const CODE = 'netcents_merchant';
     protected $_scopeConfig;
@@ -85,7 +87,8 @@ class Payment extends AbstractMethod {
      * @param Order $order
      * @return array
      */
-    public function getNetCentsResponse(Order $order) {
+    public function getNetCentsResponse(Order $order)
+    {
 
         $uriCallback = $this->urlBuilder->getUrl('netcents/statusPage/callback');
         $uriSuccess =  $this->urlBuilder->getUrl('netcents/statusPage/success');
@@ -119,7 +122,7 @@ class Payment extends AbstractMethod {
             if ($response->body->status == 200) {
                 return [
                     'status' => 'ok',
-                    'redirect_url' => $this->_scopeConfig->getValue('payment/netcents_merchant/api_fields/api_url') . '/merchant/widget?data=' . $response->body->token . '&widget_id=' . $payment->widgetId
+                    'redirect_url' => $this->_scopeConfig->getValue('payment/netcents_merchant/api_fields/api_url') . '/merchant/widget?data=' . $response->body->token
                 ];
             } else {
                 return [
@@ -128,13 +131,11 @@ class Payment extends AbstractMethod {
                     'errorMsg' => 'Cant use this payment method at this time'
                 ];
             }
-
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return [
                 'status' => 'error',
                 'errorCode' => 1,
-                'errorMsg' => 'Error: '.$e->getMessage()
+                'errorMsg' => 'Error: ' . $e->getMessage()
             ];
         }
     }
@@ -145,7 +146,8 @@ class Payment extends AbstractMethod {
      * @param string $defaultValue
      * @return mixed|string
      */
-    protected function getStatusDataOrDefault($configOption, $defaultValue = 'pending') {
+    protected function getStatusDataOrDefault($configOption, $defaultValue = 'pending')
+    {
         $data = $this->getConfigData($configOption);
         if (!$data) {
             $data = $defaultValue;
@@ -159,8 +161,9 @@ class Payment extends AbstractMethod {
      * @param string $spectrocoinStatus
      * @return mixed|string
      */
-    protected function getOrderStatus($spectrocoinStatus) {
-        switch($spectrocoinStatus) {
+    protected function getOrderStatus($spectrocoinStatus)
+    {
+        switch ($spectrocoinStatus) {
             case OrderStatusEnum::$New:
                 $statusOption = $this->getStatusDataOrDefault(
                     'payment_settings/order_status_new',
@@ -212,5 +215,4 @@ class Payment extends AbstractMethod {
 
         return $statusOption;
     }
-
 }
