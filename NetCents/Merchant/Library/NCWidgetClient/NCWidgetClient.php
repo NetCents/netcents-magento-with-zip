@@ -13,6 +13,21 @@ class NCWidgetClient
         $this->paymentData = $paymentData;
     }
 
+    function nc_get_api_url($host_url)
+    {
+        $parsed = parse_url($host_url);
+        if ($host_url == 'https://merchant.net-cents.com') {
+            $api_url = 'https://api.net-cents.com';
+        } else if ($host_url == 'https://gateway-staging.net-cents.com') {
+            $api_url = 'https://api-staging.net-cents.com';
+        } else if ($host_url == 'https://gateway-test.net-cents.com') {
+            $api_url = 'https://api-test.net-cents.com';
+        } else {
+            $api_url = $parsed['scheme'] . '://' . 'api.' . $parsed['host'];
+        }
+        return $api_url;
+    }
+
     function encryptData()
     {
         $payload = array(
