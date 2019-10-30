@@ -122,7 +122,7 @@ class Payment extends AbstractMethod
             if ($response->body->status == 200) {
                 return [
                     'status' => 'ok',
-                    'redirect_url' => $this->_scopeConfig->getValue('payment/netcents_merchant/api_fields/api_url') . '/merchant/widget?data=' . $response->body->token
+                    'redirect_url' => $this->_scopeConfig->getValue('payment/netcents_merchant/api_fields/api_url') . '/widget/merchant/widget?data=' . $response->body->token
                 ];
             } else {
                 return [

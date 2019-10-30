@@ -92,7 +92,6 @@ class Payment extends AbstractMethod
         $uriCallback = $this->urlBuilder->getUrl('netcents/statusPage/callback');
         $uriSuccess =  $this->urlBuilder->getUrl('netcents/statusPage/success');
         $total = number_format($order->getGrandTotal(), 2, '.', '');
-
         $description = array();
         foreach ($order->getAllItems() as $item) {
             $description[] = number_format($item->getQtyOrdered(), 0) . ' × ' . $item->getName();
@@ -117,11 +116,10 @@ class Payment extends AbstractMethod
             $client = new NCWidgetClient($payment);
 
             $response = $client->encryptData();
-
             if ($response->body->status == 200) {
                 return [
                     'status' => 'ok',
-                    'redirect_url' => $this->_scopeConfig->getValue('payment/netcents_merchant/api_fields/api_url') . '/merchant/widget?data=' . $response->body->token
+                    'redirect_url' => $this->_scopeConfig->getValue('payment/netcents_merchant/api_fields/api_url') . '/widget/merchant/widget?data=' . $response->body->token
                 ];
             } else {
                 return [

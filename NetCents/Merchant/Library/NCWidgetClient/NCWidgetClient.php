@@ -13,7 +13,7 @@ class NCWidgetClient
         $this->paymentData = $paymentData;
     }
 
-    function nc_get_api_url($host_url)
+    private function nc_get_api_url($host_url)
     {
         $parsed = parse_url($host_url);
         if ($host_url == 'https://merchant.net-cents.com') {
@@ -54,7 +54,7 @@ class NCWidgetClient
                 'hosted_payment_id' => $this->paymentData->widgetId,
             ),
         );
-        $api_url = nc_get_api_url($this->paymentData->merchantUrl);
+        $api_url = $this->nc_get_api_url($this->paymentData->merchantUrl);
         $formHandler =  new \Httpful\Handlers\FormHandler();
         $data = $formHandler->serialize($payload);
 
