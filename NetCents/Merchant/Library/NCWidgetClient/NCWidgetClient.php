@@ -55,13 +55,15 @@ class NCWidgetClient
             ),
         );
         $api_url = $this->nc_get_api_url($this->paymentData->merchantUrl);
-        $formHandler =  new \Httpful\Handlers\FormHandler();
-        $data = $formHandler->serialize($payload);
-
-        $response =  \Httpful\Request::post($api_url . '/widget/v2/encrypt')
-            ->body($data)
-            ->addHeader('Authorization', 'Basic ' .  base64_encode($this->paymentData->apiKey . ':' . $this->paymentData->secretKey))
-            ->send();
-        return $response;
+        $curl = curl_init($api_url . '/widget/v2/encrypt');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type:application/json',
+            'Authorization:Basic ' . base64_encode($this->paymentData->apiKey . ':' . $this->paymentData->secretKey)
+        ));
+        $response = curl_exec($curl);
+        return json_decode($response);
     }
 }
