@@ -1,4 +1,5 @@
 <?php
+
 namespace NetCents\Merchant\Model;
 
 use Braintree\Exception;
@@ -19,7 +20,8 @@ use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 
 
-class Payment extends AbstractMethod {
+class Payment extends AbstractMethod
+{
     const COINGATE_MAGENTO_VERSION = '1.0.6';
     const CODE = 'netcents_merchant';
     protected $_scopeConfig;
@@ -80,17 +82,16 @@ class Payment extends AbstractMethod {
         $this->storeManager = $storeManager;
     }
 
-
     /**
      * @param Order $order
      * @return array
      */
-    public function getNetCentsResponse(Order $order) {
+    public function getNetCentsResponse(Order $order)
+    {
 
         $uriCallback = $this->urlBuilder->getUrl('netcents/statusPage/callback');
         $uriSuccess =  $this->urlBuilder->getUrl('netcents/statusPage/success');
         $total = number_format($order->getGrandTotal(), 2, '.', '');
-
         $description = array();
         foreach ($order->getAllItems() as $item) {
             $description[] = number_format($item->getQtyOrdered(), 0) . ' × ' . $item->getName();
@@ -115,11 +116,10 @@ class Payment extends AbstractMethod {
             $client = new NCWidgetClient($payment);
 
             $response = $client->encryptData();
-
-            if ($response->body->status == 200) {
+            if ($response->status == 200) {
                 return [
                     'status' => 'ok',
-                    'redirect_url' => $this->_scopeConfig->getValue('payment/netcents_merchant/api_fields/api_url') . '/merchant/widget?data=' . $response->body->token . '&widget_id=' . $payment->widgetId
+                    'redirect_url' => $this->_scopeConfig->getValue('payment/netcents_merchant/api_fields/api_url') . '/widget/merchant/widget?data=' . $response->token
                 ];
             } else {
                 return [
@@ -128,13 +128,11 @@ class Payment extends AbstractMethod {
                     'errorMsg' => 'Cant use this payment method at this time'
                 ];
             }
-
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return [
                 'status' => 'error',
                 'errorCode' => 1,
-                'errorMsg' => 'Error: '.$e->getMessage()
+                'errorMsg' => 'Error: ' . $e->getMessage()
             ];
         }
     }
@@ -145,7 +143,8 @@ class Payment extends AbstractMethod {
      * @param string $defaultValue
      * @return mixed|string
      */
-    protected function getStatusDataOrDefault($configOption, $defaultValue = 'pending') {
+    protected function getStatusDataOrDefault($configOption, $defaultValue = 'pending')
+    {
         $data = $this->getConfigData($configOption);
         if (!$data) {
             $data = $defaultValue;
@@ -159,8 +158,9 @@ class Payment extends AbstractMethod {
      * @param string $spectrocoinStatus
      * @return mixed|string
      */
-    protected function getOrderStatus($spectrocoinStatus) {
-        switch($spectrocoinStatus) {
+    protected function getOrderStatus($spectrocoinStatus)
+    {
+        switch ($spectrocoinStatus) {
             case OrderStatusEnum::$New:
                 $statusOption = $this->getStatusDataOrDefault(
                     'payment_settings/order_status_new',
@@ -213,19 +213,18 @@ class Payment extends AbstractMethod {
         return $statusOption;
     }
 
-    public function updateOrderStatus(Order $order) {
+    public function updateOrderStatus(Order $order)
+    {
         try {
-//            $orderState = $this->getOrderStatus($callback->getStatus());
+            //            $orderState = $this->getOrderStatus($callback->getStatus());
 
-//            $order
-//                ->setState($orderState, true)
-//                ->setStatus($order->getConfig()->getStateDefaultStatus($orderState))
-//                ->save();
-//            return true;
-        }
-        catch (\Exception $e) {
+            //            $order
+            //                ->setState($orderState, true)
+            //                ->setStatus($order->getConfig()->getStateDefaultStatus($orderState))
+            //                ->save();
+            //            return true;
+        } catch (\Exception $e) {
             exit('Error occurred: ' . $e);
         }
     }
-
 }

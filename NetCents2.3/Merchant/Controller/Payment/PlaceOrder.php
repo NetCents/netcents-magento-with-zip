@@ -12,7 +12,8 @@ use Magento\Sales\Model\OrderFactory;
  * Class PlaceOrder
  * @package NetCents\Merchant\Controller\Payment
  */
-class PlaceOrder extends Action {
+class PlaceOrder extends Action
+{
 
     /**
      * @var Session
@@ -42,7 +43,8 @@ class PlaceOrder extends Action {
         $this->checkoutSession = $checkoutSession;
     }
 
-    public function execute() {
+    public function execute()
+    {
         $id = $this->checkoutSession->getLastOrderId();
         $order = $this->orderFactory->create()->load($id);
 
@@ -58,9 +60,5 @@ class PlaceOrder extends Action {
         $this->getResponse()->setBody(
             json_encode($this->paymentModel->getNetCentsResponse($order))
         );
-        return;
     }
-
-
-
 }

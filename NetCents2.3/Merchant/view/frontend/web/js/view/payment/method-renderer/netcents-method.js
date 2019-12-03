@@ -66,7 +66,6 @@ define(
                 });
 
                 request.done(function(response) {
-                    console.log(response);
                     if (response.status && response.status == 'ok') {
                         window.location.replace(response.redirect_url);
                     } else {
