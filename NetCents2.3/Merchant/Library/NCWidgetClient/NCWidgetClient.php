@@ -55,7 +55,7 @@ class NCWidgetClient
             ),
         );
         $api_url = $this->nc_get_api_url($this->paymentData->merchantUrl);
-        $curl = curl_init($api_url . '/widget/v2/encrypt');
+        $curl = curl_init($api_url . '/merchant/v2/widget_payments');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($payload));
